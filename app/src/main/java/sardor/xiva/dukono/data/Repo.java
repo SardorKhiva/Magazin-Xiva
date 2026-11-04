@@ -84,6 +84,10 @@ public final class Repo {
         return db.productDao().search(new SimpleSQLiteQuery(sql.toString(), args.toArray()));
     }
 
+    public List<ProductListItem> getAllProducts() {
+        return db.productDao().getAll();
+    }
+
     public int countProducts() {
         return db.productDao().countAll();
     }

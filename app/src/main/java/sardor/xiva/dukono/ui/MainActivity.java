@@ -38,7 +38,10 @@ public class MainActivity extends AppCompatActivity implements ProductAdapter.Li
         setContentView(b.getRoot());
 
         b.toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_settings) {
+            if (item.getItemId() == R.id.action_products_list) {
+                startActivity(new Intent(this, ProductListActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.action_settings) {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             }

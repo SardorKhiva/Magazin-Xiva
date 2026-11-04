@@ -145,4 +145,9 @@
     <string name="fraction_no">Фақат бутун</string>
     <string name="usage_count">%1$d та товарда</string>
     <string name="reference_empty">Ҳозирча бўш</string>
+
+    <!-- Товарлар рўйхати -->
+    <string name="title_product_list">Товарлар рўйхати</string>
+    <string name="products_list">Товарлар рўйхати</string>
+    <string name="products_empty">Товарлар мавжуд эмас</string>
 </resources>

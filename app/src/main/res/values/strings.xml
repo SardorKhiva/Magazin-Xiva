@@ -145,4 +145,9 @@
     <string name="fraction_no">Faqat butun</string>
     <string name="usage_count">%1$d ta tovarda</string>
     <string name="reference_empty">Hozircha bo\'sh</string>
+
+    <!-- Tovarlar ro'yxati -->
+    <string name="title_product_list">Tovarlar ro\'yxati</string>
+    <string name="products_list">Tovarlar ro\'yxati</string>
+    <string name="products_empty">Tovarlar mavjud emas</string>
 </resources>

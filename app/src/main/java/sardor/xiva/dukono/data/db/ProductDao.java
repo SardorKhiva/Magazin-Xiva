@@ -35,4 +35,12 @@ public interface ProductDao {
 
     @RawQuery
     List<ProductListItem> search(SupportSQLiteQuery query);
+
+    @Query("SELECT p.id AS id, p.name AS name, p.code AS code, p.price AS price, " +
+           "p.balance AS balance, p.initial_qty AS initial_qty, u.name AS unit_name, " +
+           "u.allow_fraction AS allow_fraction, p.expiry_date AS expiry_date " +
+           "FROM products p " +
+           "JOIN units u ON u.id = p.unit_id " +
+           "ORDER BY p.name_sort, p.id")
+    List<ProductListItem> getAll();
 }
