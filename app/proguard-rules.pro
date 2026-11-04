@@ -1,0 +1,1 @@
+# Dukon: qoidalar yo'q

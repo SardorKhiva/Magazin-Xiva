@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Дукон</string>
+
+    <!-- Қидирув -->
+    <string name="search_hint">Товар номи ёки коди...</string>
+    <string name="total_count">Жами: %1$d та товар</string>
+    <string name="no_results">Товар топилмади</string>
+    <string name="add_new_product">Янги товар қўшиш</string>
+    <string name="history_title">Охирги қидирувлар</string>
+    <string name="clear_history">Тарихни тозалаш</string>
+    <string name="clear">Тозалаш</string>
+    <string name="back">Орқага</string>
+    <string name="add">Қўшиш</string>
+
+    <!-- Майдонлар -->
+    <string name="product_name">Номи</string>
+    <string name="product_code">Коди</string>
+    <string name="product_price">Нархи</string>
+    <string name="product_qty">Адади</string>
+    <string name="product_balance">Қолдиғи</string>
+    <string name="unit">Ўлчов бирлиги</string>
+    <string name="category">Категория</string>
+    <string name="manufacturer">Ишлаб чиқарувчи</string>
+    <string name="country">Давлат</string>
+    <string name="expiry_date">Яроқлилик муддати</string>
+    <string name="note">Изоҳ</string>
+    <string name="value">Қиймат</string>
+    <string name="no_category">— Категориясиз —</string>
+
+    <!-- Кўриниш -->
+    <string name="code_value">Код: %1$s</string>
+    <string name="price_value">Нархи: %1$s</string>
+    <string name="qty_value">Адади: %1$s</string>
+    <string name="balance_value">Қолдиғи: %1$s</string>
+    <string name="money_format">%1$s сўм</string>
+    <string name="qty_with_unit">%1$s %2$s</string>
+    <string name="date_with_status">%1$s (%2$s)</string>
+    <string name="days_short">%1$d кун</string>
+    <string name="expiry_near">%1$d кун қолди</string>
+    <string name="expiry_overdue">Муддати ўтган</string>
+    <string name="expiry_overdue_days">%1$d кун ўтган</string>
+    <string name="expiry_today">Бугун тугайди</string>
+    <string name="date_picker_title">Яроқлилик муддати</string>
+
+    <!-- Ҳаракатлар -->
+    <string name="movements_title">Қолдиқ ҳаракатлари</string>
+    <string name="no_movements">Ҳаракатлар йўқ</string>
+    <string name="movement_title_format">%1$s · %2$s</string>
+    <string name="movement_delta_format">%1$s %2$s</string>
+    <string name="stock_delta_format">Ўзгариш: %1$s (%2$s). Янги қолдиқ: %3$s</string>
+
+    <!-- Тугмалар -->
+    <string name="save">Сақлаш</string>
+    <string name="cancel">Бекор қилиш</string>
+    <string name="delete">Ўчириш</string>
+    <string name="edit">Таҳрирлаш</string>
+    <string name="change">Ўзгартириш</string>
+    <string name="enter">Кириш</string>
+    <string name="ok">OK</string>
+    <string name="save_anyway">Барибир сақлаш</string>
+    <string name="unsaved_changes">Ўзгаришлар сақланмади</string>
+    <string name="exit_without_saving">Сақламасдан чиқиш</string>
+    <string name="stay">Қолиш</string>
+
+    <!-- Хабарлар -->
+    <string name="delete_confirm_message">\"%1$s\" ўчирилсинми? Бу амални қайтариб бўлмайди.</string>
+    <string name="delete_category_warning">Бу категорияда %1$d та товар бор. Улар категориясиз қолади. Давом этилсинми?</string>
+    <string name="unit_in_use">Бу бирлик %1$d та товарда ишлатилмоқда, ўчириб бўлмайди.</string>
+    <string name="saved">Сақланди</string>
+    <string name="deleted">Ўчирилди</string>
+    <string name="error_generic">Хатолик юз берди</string>
+    <string name="title_add_product">Янги товар</string>
+    <string name="title_edit_product">Товарни таҳрирлаш</string>
+    <string name="title_product">Товар</string>
+
+    <!-- Текширув -->
+    <string name="name_required">Ном киритилиши шарт</string>
+    <string name="name_exists">Бу ном аллақачон мавжуд</string>
+    <string name="code_required">Код киритилиши шарт</string>
+    <string name="code_exists">Бу код аллақачон мавжуд</string>
+    <string name="price_invalid">Нарх бутун сон бўлиши керак</string>
+    <string name="qty_invalid">Миқдор нотўғри</string>
+    <string name="fraction_not_allowed">Бу бирликда каср киритиб бўлмайди</string>
+    <string name="unit_required">Бирликни танланг</string>
+    <string name="reason_required">Сабабни танланг</string>
+    <string name="note_required">Изоҳ киритилиши шарт</string>
+    <string name="duplicate_name_title">Такрор ном</string>
+    <string name="duplicate_name_message">\"%1$s\" номли товар аллақачон бор. Барибир сақлансинми?</string>
+
+    <!-- Қолдиқ сабаблари -->
+    <string name="stock_reason_title">Қолдиқ ўзгариши сабаби</string>
+    <string name="reason_initial">Бошланғич</string>
+    <string name="reason_in">Кирим</string>
+    <string name="reason_out">Чиқим</string>
+    <string name="reason_adjust">Тузатиш</string>
+    <string name="reason_defect">Брак</string>
+    <string name="reason_other">Бошқа</string>
+
+    <!-- Созламалар -->
+    <string name="settings">Созламалар</string>
+    <string name="language">Тил</string>
+    <string name="language_lat">Ўзбек (лотин)</string>
+    <string name="language_cyr">Ўзбек (кирилл)</string>
+    <string name="theme">Мавзу</string>
+    <string name="theme_system">Тизим</string>
+    <string name="theme_light">Кундузги</string>
+    <string name="theme_dark">Тунги</string>
+    <string name="low_stock_limit">Кам қолдиқ чегараси</string>
+    <string name="expiry_warning_days">Муддат огоҳлантириш кунлари</string>
+    <string name="auto_lock">Автоқулф</string>
+    <string name="lock_immediate">Дарҳол</string>
+    <string name="lock_1min">1 дақиқа</string>
+    <string name="lock_5min">5 дақиқа</string>
+    <string name="change_pin">PIN ўзгартириш</string>
+    <string name="settings_button_value">%1$s: %2$s</string>
+    <string name="current_pin">Жорий PIN</string>
+    <string name="new_pin">Янги PIN</string>
+    <string name="repeat_pin">Янги PIN (такрор)</string>
+    <string name="pin_changed">PIN ўзгартирилди</string>
+    <string name="pin_change_wrong">Жорий PIN нотўғри</string>
+
+    <!-- PIN -->
+    <string name="pin_4digits">4 хонали PIN киритинг</string>
+    <string name="pin_mismatch">PIN мос келмади</string>
+    <string name="pin_wrong">PIN нотўғри</string>
+    <string name="pin_locked">Жуда кўп хато. %1$d сониядан кейин қайта уриниб кўринг</string>
+    <string name="pin_set_title">PIN ўрнатиш</string>
+    <string name="pin_set_subtitle">Дастурни ҳимоялаш учун 4 хонали PIN киритинг</string>
+    <string name="pin_set_button">Ўрнатиш</string>
+    <string name="pin_repeat_title">PIN ни тасдиқланг</string>
+    <string name="pin_repeat_subtitle">PIN ни қайта киритинг</string>
+    <string name="pin_confirm_button">Тасдиқлаш</string>
+    <string name="pin_enter_title">PIN киритинг</string>
+    <string name="pin_enter_subtitle">Дастурни очиш учун PIN киритинг</string>
+
+    <!-- Маълумотномалар -->
+    <string name="units">Бирликлар</string>
+    <string name="categories">Категориялар</string>
+    <string name="add_unit">Бирлик қўшиш</string>
+    <string name="edit_unit">Бирликни таҳрирлаш</string>
+    <string name="add_category">Категория қўшиш</string>
+    <string name="edit_category">Категорияни таҳрирлаш</string>
+    <string name="fraction_yes">Каср рухсат</string>
+    <string name="fraction_no">Фақат бутун</string>
+    <string name="usage_count">%1$d та товарда</string>
+    <string name="reference_empty">Ҳозирча бўш</string>
+</resources>

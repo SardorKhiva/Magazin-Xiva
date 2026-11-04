@@ -1,0 +1,213 @@
+set -e
+J=/mnt/user-data/outputs/Dukon/app/src/main/java/sardor/xiva/dukono
+cat > $J/util/UzText.java <<'EOF'
+package sardor.xiva.dukono.util;
+
+import java.util.Locale;
+
+/**
+ * O'zbekcha matn bilan ishlash: lotin va kirill alifbolarini bitta shaklga keltirish (qidiruv uchun)
+ * hamda kirill alifbosi bo'yicha saralash kalitini hosil qilish.
+ */
+public final class UzText {
+
+    private UzText() {}
+
+    /** Kirill alifbosi tartibi (o'zbek: ... ъ, э, ю, я, ў, қ, ғ, ҳ). */
+    private static final String CYR = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяўқғҳ";
+
+    /** Har bir kirill harfning qidiruv uchun lotincha shakli (CYR bilan bir xil tartibda). */
+    private static final String[] LAT = {
+            "a", "b", "v", "g", "d", "e", "yo", "j", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t",
+            "u", "f", "h", "s", "ch", "sh", "sh", "", "i", "", "e", "yu", "ya", "o", "k", "g", "h"
+    };
+
+    private static boolean isApostrophe(char c) {
+        return c == '\'' || c == '\u2018' || c == '\u2019' || c == '\u02BB' || c == '\u02BC'
+                || c == '`' || c == '\u00B4' || c == '\u2032';
+    }
+
+    /** Ortiqcha bo'sh joylarni olib tashlaydi, chetlarini kesadi. */
+    public static String collapse(CharSequence s) {
+        if (s == null) return "";
+        return s.toString().trim().replaceAll("\\s+", " ");
+    }
+
+    /**
+     * Qidiruv normalizatsiyasi: kichik harf, kirill -> lotin, o'/g' belgilari, q/k, x/h, w/v,
+     * ye/e, ts/s farqlari yo'qotiladi. Ma'lumot ham, so'rov ham shu funksiyadan o'tadi.
+     */
+    public static String normalize(CharSequence s) {
+        String t = collapse(s).toLowerCase(Locale.ROOT);
+        StringBuilder sb = new StringBuilder(t.length() + 8);
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            if (isApostrophe(c)) continue;
+            int idx = CYR.indexOf(c);
+            if (idx >= 0) {
+                sb.append(LAT[idx]);
+                continue;
+            }
+            switch (c) {
+                case 'q': sb.append('k'); break;
+                case 'x': sb.append('h'); break;
+                case 'w': sb.append('v'); break;
+                default: sb.append(c);
+            }
+        }
+        return sb.toString().replace("ye", "e").replace("ts", "s");
+    }
+
+    private static char latToCyr(char c) {
+        switch (c) {
+            case 'a': return 'а';
+            case 'b': return 'б';
+            case 'd': return 'д';
+            case 'f': return 'ф';
+            case 'h': return 'ҳ';
+            case 'i': return 'и';
+            case 'j': return 'ж';
+            case 'k': return 'к';
+            case 'l': return 'л';
+            case 'm': return 'м';
+            case 'n': return 'н';
+            case 'p': return 'п';
+            case 'q': return 'қ';
+            case 'r': return 'р';
+            case 'u': return 'у';
+            case 'v': return 'в';
+            case 'w': return 'в';
+            case 'x': return 'х';
+            case 'z': return 'з';
+            default: return 0;
+        }
+    }
+
+    /** Lotincha matnni kirillga o'giradi (saralash uchun). Kirillcha harflar o'zgarishsiz qoladi. */
+    public static String toCyrillic(CharSequence s) {
+        String t = collapse(s).toLowerCase(Locale.ROOT);
+        int n = t.length();
+        StringBuilder sb = new StringBuilder(n + 4);
+        for (int i = 0; i < n; i++) {
+            char c = t.charAt(i);
+            char nx = i + 1 < n ? t.charAt(i + 1) : 0;
+            if (isApostrophe(c)) {
+                sb.append('ъ');
+                continue;
+            }
+            switch (c) {
+                case 'o':
+                    if (isApostrophe(nx)) { sb.append('ў'); i++; } else sb.append('о');
+                    break;
+                case 'g':
+                    if (isApostrophe(nx)) { sb.append('ғ'); i++; } else sb.append('г');
+                    break;
+                case 's':
+                    if (nx == 'h') { sb.append('ш'); i++; } else sb.append('с');
+                    break;
+                case 'c':
+                    if (nx == 'h') { sb.append('ч'); i++; } else sb.append('к');
+                    break;
+                case 't':
+                    if (nx == 's') { sb.append('ц'); i++; } else sb.append('т');
+                    break;
+                case 'y':
+                    if (nx == 'o') { sb.append('ё'); i++; }
+                    else if (nx == 'u') { sb.append('ю'); i++; }
+                    else if (nx == 'a') { sb.append('я'); i++; }
+                    else if (nx == 'e') { sb.append('е'); i++; }
+                    else sb.append('й');
+                    break;
+                case 'e': {
+                    boolean wordStart = i == 0 || !Character.isLetter(t.charAt(i - 1));
+                    sb.append(wordStart ? 'э' : 'е');
+                    break;
+                }
+                default: {
+                    char m = latToCyr(c);
+                    sb.append(m != 0 ? m : c);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Saralash kaliti: nom kirillga o'giriladi va har bir harf alifbodagi o'rniga qarab
+     * monoton ketma-ketlikka almashtiriladi (SQLite BINARY tartibi bilan to'g'ri ishlaydi).
+     * Raqamlar va belgilar harflardan oldin keladi. Shu kalit takroriy nomni aniqlash uchun ham ishlatiladi.
+     */
+    public static String sortKey(CharSequence s) {
+        String cyr = toCyrillic(s);
+        StringBuilder sb = new StringBuilder(cyr.length());
+        for (int i = 0; i < cyr.length(); i++) {
+            char ch = cyr.charAt(i);
+            int idx = CYR.indexOf(ch);
+            sb.append(idx >= 0 ? (char) (0x100 + idx) : ch);
+        }
+        return sb.toString();
+    }
+
+    /** SQL LIKE uchun maxsus belgilarni ekranlaydi (ESCAPE '\'). */
+    public static String escapeLike(String s) {
+        return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+    }
+
+    static int cyrLengthForTest() { return CYR.length(); }
+    static int latLengthForTest() { return LAT.length; }
+}
+EOF
+
+# --- sandboxda tekshiruv ---
+mkdir -p /tmp/uztest/sardor/xiva/dukono/util
+cp $J/util/UzText.java /tmp/uztest/sardor/xiva/dukono/util/
+cat > /tmp/uztest/sardor/xiva/dukono/util/Check.java <<'EOF'
+package sardor.xiva.dukono.util;
+public class Check {
+    static int fail = 0;
+    static void eq(String a, String b, String msg) {
+        if (!a.equals(b)) { fail++; System.out.println("XATO: " + msg + "  [" + a + "] != [" + b + "]"); }
+    }
+    static void lt(String a, String b, String msg) {
+        if (a.compareTo(b) >= 0) { fail++; System.out.println("XATO (tartib): " + msg); }
+    }
+    public static void main(String[] x) {
+        eq(String.valueOf(UzText.cyrLengthForTest()), String.valueOf(UzText.latLengthForTest()), "CYR/LAT uzunligi");
+        String[][] same = {
+            {"Сут","sut"},{"Ўзбекистон","O'zbekiston"},{"Ўзбекистон","Ozbekiston"},{"Қаймоқ","Qaymoq"},
+            {"Шакар","Shakar"},{"Чой","Choy"},{"Ёғ","Yog'"},{"Янги","yangi"},{"Етти","Yetti"},
+            {"Цирк","Sirk"},{"Цирк","Tsirk"},{"Ҳаво","Xavo"},{"Ҳаво","Havo"},{"Вино","Wino"},
+            {"МАЪЛУМОТ","ma'lumot"},{"Нон 500г","non 500g"},{"Кофе","kofe"},{"Ғишт","G'isht"}
+        };
+        for (String[] p : same) eq(UzText.normalize(p[0]), UzText.normalize(p[1]), p[0] + " ~ " + p[1]);
+
+        eq(UzText.toCyrillic("shakar"), "шакар", "shakar");
+        eq(UzText.toCyrillic("o'rik"), "ўрик", "o'rik");
+        eq(UzText.toCyrillic("yog'"), "ёғ", "yog'");
+        eq(UzText.toCyrillic("ma'no"), "маъно", "ma'no");
+        eq(UzText.toCyrillic("choy"), "чой", "choy");
+        eq(UzText.toCyrillic("eshik"), "эшик", "eshik");
+        eq(UzText.toCyrillic("yetti"), "етти", "yetti");
+        eq(UzText.toCyrillic("tsirk"), "цирк", "tsirk");
+        eq(UzText.toCyrillic("qalam"), "қалам", "qalam");
+        eq(UzText.toCyrillic("hovli"), "ҳовли", "hovli");
+        eq(UzText.toCyrillic("xamir"), "хамир", "xamir");
+        eq(UzText.toCyrillic("Sut 1 litr"), "сут 1 литр", "sut 1 litr");
+
+        // takroriy nom kaliti: lotin == kirill
+        eq(UzText.sortKey("Sut"), UzText.sortKey("Сут"), "sortKey sut");
+        eq(UzText.sortKey("  Sut   1 "), UzText.sortKey("сут 1"), "sortKey bo'sh joy");
+
+        // alifbo tartibi (hammasi kirill tartibida)
+        String[] ordered = {"Анор","Bodom","Вино","Gilam","Ёғоч","Елим2","Non","Olma","Shakar","Sut","Яшил","O'rik","Qalam","Hovli"};
+        // to'g'ri tartib: анор, бодом, вино, гилам, елим2, ёғоч, нон, олма, сут, шакар, яшил, ўрик, қалам, ҳовли
+        String[] expect = {"Анор","Bodom","Вино","Gilam","Елим2","Ёғоч","Non","Olma","Sut","Shakar","Яшил","O'rik","Qalam","Hovli"};
+        for (int i = 0; i + 1 < expect.length; i++) lt(UzText.sortKey(expect[i]), UzText.sortKey(expect[i+1]), expect[i] + " < " + expect[i+1]);
+        lt(UzText.sortKey("1 kg"), UzText.sortKey("Anor"), "raqam harfdan oldin");
+
+        eq(UzText.escapeLike("50%_x\\"), "50\\%\\_x\\\\", "escapeLike");
+        System.out.println(fail == 0 ? "HAMMASI OK" : ("XATOLAR: " + fail));
+    }
+}
+EOF
+cd /tmp/uztest && javac -encoding UTF-8 -d out sardor/xiva/dukono/util/*.java && java -cp out sardor.xiva.dukono.util.Check

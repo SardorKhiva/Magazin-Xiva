@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="chip_bg">#263238</color>
+
+    <color name="low_stock_bg">#4A2F12</color>
+    <color name="no_stock_bg">#4A1F1F</color>
+
+    <color name="expiry_near_chip">#5A4A12</color>
+    <color name="expiry_near_line">#FBC02D</color>
+    <color name="expired_chip">#5A3512</color>
+    <color name="expired_line">#FF9800</color>
+
+    <color name="movement_in">#81C784</color>
+    <color name="movement_out">#EF9A9A</color>
+</resources>

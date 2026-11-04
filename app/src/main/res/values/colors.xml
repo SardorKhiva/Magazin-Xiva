@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2196F3</color>
+    <color name="primary_variant">#1976D2</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="secondary">#03DAC6</color>
+    <color name="on_secondary">#000000</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="chip_bg">#E3F2FD</color>
+
+    <!-- Qoldiq holati -->
+    <color name="low_stock_bg">#FFF3E0</color>
+    <color name="no_stock_bg">#FFEBEE</color>
+
+    <!-- Yaroqlilik muddati -->
+    <color name="expiry_near_chip">#FFF9C4</color>
+    <color name="expiry_near_line">#FBC02D</color>
+    <color name="expired_chip">#FFE0B2</color>
+    <color name="expired_line">#F57C00</color>
+
+    <!-- Harakatlar -->
+    <color name="movement_in">#2E7D32</color>
+    <color name="movement_out">#C62828</color>
+</resources>
