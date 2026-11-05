@@ -92,7 +92,7 @@
     <string name="reason_in">Кирим</string>
     <string name="reason_out">Чиқим</string>
     <string name="reason_adjust">Тузатиш</string>
-    <string name="reason_defect">Брак</string>
+    <string name="reason_defect">Яроқсиз</string>
     <string name="reason_other">Бошқа</string>
 
     <!-- Созламалар -->
@@ -157,10 +157,15 @@
     <string name="dynamic_pin_empty">Илтимос, PIN-кодни киритинг!</string>
 
     <!-- CSV Export/Import -->
-    <string name="export_csv">Товарларни CSV га экспорт қилиш</string>
-    <string name="import_csv">Товарларни CSV дан импорт қилиш</string>
+    <string name="export_csv">Товарларни CSV га экспорт қилиш ↑</string>
+    <string name="import_csv">Товарларни CSV дан импорт қилиш ↓</string>
     <string name="export_success">%1$d та товар CSV файлга сақланди</string>
     <string name="import_success">%1$d та товар CSV дан импорт қилинди</string>
     <string name="export_error">Экспорт қилишда хатолик юз берди</string>
     <string name="import_error">Импорт қилишда хатолик юз берди</string>
+
+    <!-- Расм -->
+    <string name="product_image">Товар расми</string>
+    <string name="select_image">Расм танлаш</string>
+    <string name="remove_image">Расмни ўчириш</string>
 </resources>

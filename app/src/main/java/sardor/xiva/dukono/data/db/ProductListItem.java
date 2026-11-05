@@ -21,4 +21,7 @@ public class ProductListItem {
 
     @ColumnInfo(name = "expiry_date")
     public Long expiryDate;
+
+    @ColumnInfo(name = "image_path")
+    public String imagePath;
 }

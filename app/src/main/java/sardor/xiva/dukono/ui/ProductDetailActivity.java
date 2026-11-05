@@ -101,6 +101,17 @@ public class ProductDetailActivity extends AppCompatActivity {
         boolean fraction = unit != null && unit.allowFraction;
         String unitName = unit == null ? "" : unit.name;
 
+        if (p.imagePath != null && new java.io.File(p.imagePath).exists()) {
+            b.productImage.setVisibility(View.VISIBLE);
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            int imageWidth = (int) (screenWidth * 0.70);
+            b.productImage.getLayoutParams().width = imageWidth;
+            b.productImage.requestLayout();
+            sardor.xiva.dukono.util.ImageUtil.loadProductImage(b.productImage, p.imagePath);
+        } else {
+            b.productImage.setVisibility(View.GONE);
+        }
+
         b.productName.setText(p.name);
         b.codeText.setText(getString(R.string.code_value, p.code));
         b.priceText.setText(getString(R.string.price_value,

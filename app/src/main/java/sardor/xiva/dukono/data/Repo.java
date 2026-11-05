@@ -64,7 +64,7 @@ public final class Repo {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT p.id AS id, p.name AS name, p.code AS code, p.price AS price, ")
                 .append("p.balance AS balance, p.initial_qty AS initial_qty, u.name AS unit_name, ")
-                .append("u.allow_fraction AS allow_fraction, p.expiry_date AS expiry_date ")
+                .append("u.allow_fraction AS allow_fraction, p.expiry_date AS expiry_date, p.image_path AS image_path ")
                 .append("FROM products p ")
                 .append("JOIN units u ON u.id = p.unit_id ")
                 .append("LEFT JOIN categories c ON c.id = p.category_id ")

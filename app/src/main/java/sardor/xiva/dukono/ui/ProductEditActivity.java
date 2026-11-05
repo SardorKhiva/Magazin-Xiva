@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -53,6 +55,9 @@ public class ProductEditActivity extends AppCompatActivity {
     private Long selectedUnitId;
     private Long selectedCategoryId;
     private Long expiryEpochDay;
+    private String currentImagePath;
+
+    private ActivityResultLauncher<String> imagePickerLauncher;
 
     private String initialSignature = "";
     private boolean restored;
@@ -73,6 +78,31 @@ public class ProductEditActivity extends AppCompatActivity {
         });
 
         productId = getIntent().getLongExtra(EXTRA_ID, 0);
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        AppExecutors.io(() -> {
+                            String path = sardor.xiva.dukono.util.ImageUtil.saveProductImage(this, uri);
+                            AppExecutors.main(() -> {
+                                if (path != null) {
+                                    if (currentImagePath != null && !path.equals(currentImagePath)) {
+                                        sardor.xiva.dukono.util.ImageUtil.deleteImageFile(currentImagePath);
+                                    }
+                                    currentImagePath = path;
+                                    renderImagePreview();
+                                }
+                            });
+                        });
+                    }
+                });
+
+        b.selectImageButton.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        b.removeImageButton.setOnClickListener(v -> {
+            currentImagePath = null;
+            renderImagePreview();
+        });
 
         b.toolbar.setNavigationOnClickListener(v -> attemptClose());
         b.toolbar.inflateMenu(R.menu.menu_edit);
@@ -184,6 +214,7 @@ public class ProductEditActivity extends AppCompatActivity {
             selectedCategoryId = existing.categoryId;
             expiryEpochDay = existing.expiryDate;
             if (!restored) {
+                currentImagePath = existing.imagePath;
                 b.nameInput.setText(existing.name);
                 b.codeInput.setText(existing.code);
                 b.priceInput.setText(String.valueOf(existing.price));
@@ -203,6 +234,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 }
                 selectedCategoryId = null;
                 expiryEpochDay = null;
+                currentImagePath = null;
                 String preName = getIntent().getStringExtra(EXTRA_NAME);
                 String preCode = getIntent().getStringExtra(EXTRA_CODE);
                 if (!TextUtils.isEmpty(preName)) b.nameInput.setText(preName);
@@ -214,6 +246,7 @@ public class ProductEditActivity extends AppCompatActivity {
         }
         renderDropdownLabels();
         renderExpiry();
+        renderImagePreview();
         if (!restored) {
             initialSignature = signature();
         }
@@ -246,6 +279,17 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         }
         b.categoryInput.setText(categoryLabel, false);
+    }
+
+    private void renderImagePreview() {
+        if (currentImagePath != null && new java.io.File(currentImagePath).exists()) {
+            b.imagePreview.setVisibility(View.VISIBLE);
+            b.removeImageButton.setVisibility(View.VISIBLE);
+            sardor.xiva.dukono.util.ImageUtil.loadProductImage(b.imagePreview, currentImagePath);
+        } else {
+            b.imagePreview.setVisibility(View.GONE);
+            b.removeImageButton.setVisibility(View.GONE);
+        }
     }
 
     private void renderExpiry() {
@@ -294,7 +338,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 + text(b.manufacturerInput) + '\u0001'
                 + text(b.countryInput) + '\u0001'
                 + (expiryEpochDay == null ? "" : expiryEpochDay) + '\u0001'
-                + text(b.noteInput);
+                + text(b.noteInput) + '\u0001'
+                + (currentImagePath == null ? "" : currentImagePath);
     }
 
     private void clearErrors() {
@@ -387,7 +432,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 p.country = country;
                 p.expiryDate = expiryEpochDay;
                 p.note = note;
-                p.imagePath = existing != null ? existing.imagePath : null;
+                p.imagePath = currentImagePath;
                 p.searchText = searchText;
 
                 if (nameDup > 0) {

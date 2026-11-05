@@ -157,10 +157,15 @@
     <string name="dynamic_pin_empty">Iltimos, PIN-kodni kiriting!</string>
 
     <!-- CSV Export/Import -->
-    <string name="export_csv">Tovarlarni CSV ga eksport qilish</string>
-    <string name="import_csv">Tovarlarni CSV dan import qilish</string>
+    <string name="export_csv">Tovarlarni CSV ga eksport qilish ↑</string>
+    <string name="import_csv">Tovarlarni CSV dan import qilish ↓</string>
     <string name="export_success">%1$d ta tovar CSV faylga saqlandi</string>
     <string name="import_success">%1$d ta tovar CSV dan import qilindi</string>
     <string name="export_error">Eksport qilishda xatolik yuz berdi</string>
     <string name="import_error">Import qilishda xatolik yuz berdi</string>
+
+    <!-- Rasm -->
+    <string name="product_image">Tovar rasmi</string>
+    <string name="select_image">Rasm tanlash</string>
+    <string name="remove_image">Rasmni o\'chirish</string>
 </resources>

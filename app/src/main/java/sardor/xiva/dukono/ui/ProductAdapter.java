@@ -44,7 +44,8 @@ public class ProductAdapter extends ListAdapter<ProductListItem, ProductAdapter.
                             && equal(a.code, b.code)
                             && equal(a.unitName, b.unitName)
                             && a.allowFraction == b.allowFraction
-                            && equal(a.expiryDate, b.expiryDate);
+                            && equal(a.expiryDate, b.expiryDate)
+                            && equal(a.imagePath, b.imagePath);
                 }
             };
 
@@ -108,6 +109,14 @@ public class ProductAdapter extends ListAdapter<ProductListItem, ProductAdapter.
                     Fmt.qty(item.initialQty, item.allowFraction) + " " + unit));
             b.balance.setText(c.getString(R.string.balance_value,
                     Fmt.qty(item.balance, item.allowFraction) + " " + unit));
+
+            // Rasm ko'rinishi
+            if (item.imagePath != null && new java.io.File(item.imagePath).exists()) {
+                b.productImage.setVisibility(View.VISIBLE);
+                sardor.xiva.dukono.util.ImageUtil.loadProductImage(b.productImage, item.imagePath);
+            } else {
+                b.productImage.setVisibility(View.GONE);
+            }
 
             // Qoldiq rangi (fon).
             int bgColor;
