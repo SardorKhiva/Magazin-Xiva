@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 import sardor.xiva.dukono.R;
 import sardor.xiva.dukono.databinding.ItemProductBinding;
 import sardor.xiva.dukono.data.db.ProductListItem;
@@ -47,7 +49,7 @@ public class ProductAdapter extends ListAdapter<ProductListItem, ProductAdapter.
             };
 
     private static boolean equal(Object a, Object b) {
-        return a == null ? b == null : a.equals(b);
+        return Objects.equals(a, b);
     }
 
     private final Listener listener;

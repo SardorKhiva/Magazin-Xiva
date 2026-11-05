@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 import sardor.xiva.dukono.R;
 import sardor.xiva.dukono.data.db.RefItem;
 import sardor.xiva.dukono.databinding.ItemRefBinding;
@@ -34,7 +36,7 @@ public class RefAdapter extends ListAdapter<RefItem, RefAdapter.VH> {
                     return a.id == b.id
                             && a.usageCount == b.usageCount
                             && a.allowFraction == b.allowFraction
-                            && (a.name == null ? b.name == null : a.name.equals(b.name));
+                            && (Objects.equals(a.name, b.name));
                 }
             };
 

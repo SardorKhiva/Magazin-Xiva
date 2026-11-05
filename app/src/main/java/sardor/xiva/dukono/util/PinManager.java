@@ -4,6 +4,7 @@ import android.util.Base64;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.Calendar;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -54,21 +55,40 @@ public final class PinManager {
         return (int) Math.ceil(left / 1000.0);
     }
 
+    /**
+     * Bugungi dinamik PIN-kodni hisoblash (Joriy Yil + Joriy Kun).
+     */
+    public static String getDynamicPin() {
+        Calendar cal = Calendar.getInstance();
+        return String.valueOf(cal.get(Calendar.YEAR) + cal.get(Calendar.DAY_OF_MONTH));
+    }
+
     /** PIN to'g'ri bo'lsa true; xato bo'lsa urinishlar soni oshadi. */
     public static boolean verify(String pin) {
         if (isLocked()) return false;
-        try {
-            byte[] salt = Base64.decode(AppPrefs.getPinSalt(), Base64.NO_WRAP);
-            String actual = hash(pin, salt);
-            byte[] a = actual.getBytes();
-            byte[] b = AppPrefs.getPinHash().getBytes();
-            if (MessageDigest.isEqual(a, b)) {
-                AppPrefs.resetPinAttempts();
-                return true;
-            }
-        } catch (Exception ignored) {
-            // xato hisoblanadi
+
+        // 1. Bugungi Dinamik PIN-kod bilan tekshirish (masalan: 2026 + 5 = 2031)
+        if (getDynamicPin().equals(pin)) {
+            AppPrefs.resetPinAttempts();
+            return true;
         }
+
+        // 2. Agar bazada shaxsiy PIN saqlangan bo'lsa, xesh bilan tekshirish
+        if (hasPin()) {
+            try {
+                byte[] salt = Base64.decode(AppPrefs.getPinSalt(), Base64.NO_WRAP);
+                String actual = hash(pin, salt);
+                byte[] a = actual.getBytes();
+                byte[] b = AppPrefs.getPinHash().getBytes();
+                if (MessageDigest.isEqual(a, b)) {
+                    AppPrefs.resetPinAttempts();
+                    return true;
+                }
+            } catch (Exception ignored) {
+                // xato hisoblanadi
+            }
+        }
+
         int fails = AppPrefs.getFailCount() + 1;
         if (fails >= MAX_FAILS) {
             AppPrefs.setFailCount(0);

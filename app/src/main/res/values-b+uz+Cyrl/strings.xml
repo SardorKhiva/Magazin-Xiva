@@ -9,7 +9,6 @@
     <string name="add_new_product">Янги товар қўшиш</string>
     <string name="history_title">Охирги қидирувлар</string>
     <string name="clear_history">Тарихни тозалаш</string>
-    <string name="clear">Тозалаш</string>
     <string name="back">Орқага</string>
     <string name="add">Қўшиш</string>
 
@@ -57,7 +56,6 @@
     <string name="edit">Таҳрирлаш</string>
     <string name="change">Ўзгартириш</string>
     <string name="enter">Кириш</string>
-    <string name="ok">OK</string>
     <string name="save_anyway">Барибир сақлаш</string>
     <string name="unsaved_changes">Ўзгаришлар сақланмади</string>
     <string name="exit_without_saving">Сақламасдан чиқиш</string>
@@ -157,4 +155,12 @@
     <string name="dynamic_pin_hint">PIN-код</string>
     <string name="dynamic_pin_wrong">PIN-код нотўғри!</string>
     <string name="dynamic_pin_empty">Илтимос, PIN-кодни киритинг!</string>
+
+    <!-- CSV Export/Import -->
+    <string name="export_csv">Товарларни CSV га экспорт қилиш</string>
+    <string name="import_csv">Товарларни CSV дан импорт қилиш</string>
+    <string name="export_success">%1$d та товар CSV файлга сақланди</string>
+    <string name="import_success">%1$d та товар CSV дан импорт қилинди</string>
+    <string name="export_error">Экспорт қилишда хатолик юз берди</string>
+    <string name="import_error">Импорт қилишда хатолик юз берди</string>
 </resources>

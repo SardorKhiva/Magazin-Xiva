@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +16,9 @@ import sardor.xiva.dukono.R;
 import sardor.xiva.dukono.databinding.ActivitySettingsBinding;
 import sardor.xiva.dukono.databinding.DialogChangePinBinding;
 import sardor.xiva.dukono.databinding.DialogNumberBinding;
+import sardor.xiva.dukono.util.AppExecutors;
 import sardor.xiva.dukono.util.AppPrefs;
+import sardor.xiva.dukono.util.CsvHelper;
 import sardor.xiva.dukono.util.Fmt;
 import sardor.xiva.dukono.util.PinManager;
 
@@ -22,12 +26,48 @@ import sardor.xiva.dukono.util.PinManager;
 public class SettingsActivity extends AppCompatActivity {
 
     private ActivitySettingsBinding b;
+    private ActivityResultLauncher<String> exportCsvLauncher;
+    private ActivityResultLauncher<String[]> importCsvLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         b = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
+
+        exportCsvLauncher = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("text/csv"),
+                uri -> {
+                    if (uri != null) {
+                        AppExecutors.io(() -> {
+                            try {
+                                int count = CsvHelper.exportProductsToCsv(this, uri);
+                                AppExecutors.main(() -> Toast.makeText(this,
+                                        getString(R.string.export_success, count), Toast.LENGTH_SHORT).show());
+                            } catch (Exception e) {
+                                AppExecutors.main(() -> Toast.makeText(this,
+                                        R.string.export_error, Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    }
+                });
+
+        importCsvLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocument(),
+                uri -> {
+                    if (uri != null) {
+                        AppExecutors.io(() -> {
+                            try {
+                                int count = CsvHelper.importProductsFromCsv(this, uri);
+                                AppExecutors.main(() -> Toast.makeText(this,
+                                        getString(R.string.import_success, count), Toast.LENGTH_SHORT).show());
+                            } catch (Exception e) {
+                                AppExecutors.main(() -> Toast.makeText(this,
+                                        R.string.import_error, Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    }
+                });
 
         b.toolbar.setNavigationOnClickListener(v -> finish());
 
@@ -39,6 +79,8 @@ public class SettingsActivity extends AppCompatActivity {
         b.changePinButton.setOnClickListener(v -> changePin());
         b.unitsButton.setOnClickListener(v -> openReference(ReferenceActivity.TYPE_UNIT));
         b.categoriesButton.setOnClickListener(v -> openReference(ReferenceActivity.TYPE_CATEGORY));
+        b.exportCsvButton.setOnClickListener(v -> exportCsvLauncher.launch("tovarlar.csv"));
+        b.importCsvButton.setOnClickListener(v -> importCsvLauncher.launch(new String[]{"text/csv", "text/comma-separated-values", "text/plain", "*/*"}));
     }
 
     @Override

@@ -72,11 +72,11 @@ public final class Repo {
 
         List<Object> args = new ArrayList<>();
         String[] words = normalized.split(" ");
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].isEmpty()) continue;
-            if (args.size() > 0) sql.append(" AND ");
+        for (String word : words) {
+            if (word.isEmpty()) continue;
+            if (!args.isEmpty()) sql.append(" AND ");
             sql.append("(p.search_text || ' ' || IFNULL(c.name_search, '')) LIKE ? ESCAPE '\\'");
-            args.add("%" + UzText.escapeLike(words[i]) + "%");
+            args.add("%" + UzText.escapeLike(word) + "%");
         }
         sql.append(" ORDER BY CASE WHEN p.code = ? THEN 0 ELSE 1 END, p.name_sort, p.id");
         args.add(rawQuery == null ? "" : rawQuery.trim());

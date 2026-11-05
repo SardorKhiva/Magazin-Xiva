@@ -109,11 +109,8 @@ public class PinActivity extends AppCompatActivity {
             return;
         }
 
-        // Bugungi kunga mo'ljallangan haqiqiy dinamik PIN-kodni hisoblab olamiz
-        String expectedPin = getExpectedDynamicPin();
-
-        // Foydalanuvchi kiritgan PIN-kod haqiqiy dinamik PIN-kodga tengligini tekshiramiz
-        if (inputPin.equals(expectedPin)) {
+        // Foydalanuvchi kiritgan PIN-kod haqiqiy dinamik PIN-kod yoki saqlangan PIN-kodga mosligini tekshiramiz
+        if (sardor.xiva.dukono.util.PinManager.verify(inputPin)) {
             // PIN-kod to'g'ri bo'lsa, dasturni qulfdan chiqaramiz
             AppLock.unlock();
 
