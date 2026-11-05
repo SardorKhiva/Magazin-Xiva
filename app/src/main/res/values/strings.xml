@@ -94,7 +94,7 @@
     <string name="reason_in">Kirim</string>
     <string name="reason_out">Chiqim</string>
     <string name="reason_adjust">Tuzatish</string>
-    <string name="reason_defect">Brak</string>
+    <string name="reason_defect">Yaroqsiz</string>
     <string name="reason_other">Boshqa</string>
 
     <!-- Sozlamalar -->
@@ -150,4 +150,11 @@
     <string name="title_product_list">Tovarlar ro\'yxati</string>
     <string name="products_list">Tovarlar ro\'yxati</string>
     <string name="products_empty">Tovarlar mavjud emas</string>
+
+    <!-- Dinamik PIN -->
+    <string name="dynamic_pin_title">Himoya PIN-kodi</string>
+    <string name="dynamic_pin_subtitle">Dasturga kirish uchun PIN-kodni kiriting</string>
+    <string name="dynamic_pin_hint">PIN-kod</string>
+    <string name="dynamic_pin_wrong">PIN-kod noto\'g\'ri!</string>
+    <string name="dynamic_pin_empty">Iltimos, PIN-kodni kiriting!</string>
 </resources>

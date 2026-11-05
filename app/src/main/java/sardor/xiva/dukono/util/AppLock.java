@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import sardor.xiva.dukono.ui.LockActivity;
+import sardor.xiva.dukono.ui.PinActivity;
 
 /**
  * Avtoqulf: ko'rinadigan activity'lar sonini sanaydi. Ilova fondan qaytganda sozlamadagi
@@ -55,7 +56,7 @@ public final class AppLock implements Application.ActivityLifecycleCallbacks {
     public void onActivityStarted(@NonNull Activity activity) {
         startedCount++;
 
-        if (!(activity instanceof LockActivity)) {
+        if (!(activity instanceof LockActivity) && !(activity instanceof PinActivity)) {
             long timeout = AppPrefs.getAutoLockMs();
             long away = leftAt > 0 ? System.currentTimeMillis() - leftAt : 0;
             if (unlocked && leftAt > 0 && away >= Math.max(timeout, GRACE_MS)) {
@@ -78,14 +79,14 @@ public final class AppLock implements Application.ActivityLifecycleCallbacks {
         startedCount--;
         if (startedCount < 0) startedCount = 0;
         if (startedCount == 0 && !activity.isChangingConfigurations()
-                && !(activity instanceof LockActivity)) {
+                && !(activity instanceof LockActivity) && !(activity instanceof PinActivity)) {
             leftAt = System.currentTimeMillis();
         }
     }
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-        if (!(activity instanceof LockActivity) && unlocked) {
+        if (!(activity instanceof LockActivity) && !(activity instanceof PinActivity) && unlocked) {
             setContentVisible(activity, true);
         }
     }

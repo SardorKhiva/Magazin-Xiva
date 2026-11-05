@@ -150,4 +150,11 @@
     <string name="title_product_list">Товарлар рўйхати</string>
     <string name="products_list">Товарлар рўйхати</string>
     <string name="products_empty">Товарлар мавжуд эмас</string>
+
+    <!-- Динамик PIN -->
+    <string name="dynamic_pin_title">Динамик Ҳимоя PIN-коди</string>
+    <string name="dynamic_pin_subtitle">Дастурга кириш учун бугунги PIN-кодни киритинг</string>
+    <string name="dynamic_pin_hint">PIN-код</string>
+    <string name="dynamic_pin_wrong">PIN-код нотўғри!</string>
+    <string name="dynamic_pin_empty">Илтимос, PIN-кодни киритинг!</string>
 </resources>
