@@ -81,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
         b.categoriesButton.setOnClickListener(v -> openReference(ReferenceActivity.TYPE_CATEGORY));
         b.exportCsvButton.setOnClickListener(v -> exportCsvLauncher.launch("tovarlar.csv"));
         b.importCsvButton.setOnClickListener(v -> importCsvLauncher.launch(new String[]{"text/csv", "text/comma-separated-values", "text/plain", "*/*"}));
+        b.clearImagesButton.setOnClickListener(v -> confirmClearImages());
     }
 
     @Override
@@ -259,6 +260,16 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ReferenceActivity.class);
         intent.putExtra(ReferenceActivity.EXTRA_TYPE, type);
         startActivity(intent);
+    }
+
+    private void confirmClearImages() {
+        Dialogs.confirm(this, R.string.clear_all_images,
+                getString(R.string.clear_images_confirm),
+                R.string.delete,
+                () -> AppExecutors.io(() -> {
+                    sardor.xiva.dukono.data.Repo.get().clearAllProductImages(this);
+                    AppExecutors.main(() -> Toast.makeText(this, R.string.images_cleared, Toast.LENGTH_SHORT).show());
+                }));
     }
 
     private static String textOf(DialogNumberBinding db) {

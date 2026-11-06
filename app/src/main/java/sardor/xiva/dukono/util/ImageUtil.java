@@ -5,8 +5,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
+
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,18 +18,56 @@ import java.io.InputStream;
 /**
  * Tovarlar rasmlarini qayta ishlash va saqlash uchun utilit sinfi.
  * Rasmlar hajmi oshib ketmasligi uchun ularni ekran enining 70% o'lchamigacha ixchamlashtiradi (scale & compress).
+ * Maksimal fayl hajmi 500 KB (0.5 MB) dan oshmasligi kafolatlanadi.
  */
 public final class ImageUtil {
+
+    // Maksimal fayl hajmi: 500 KB (0.5 MB)
+    private static final long MAX_FILE_SIZE_BYTES = 500 * 1024L;
 
     // Konstruktorni shaxsiy qilamiz (Utility sinfidan obyekt olinmasligi uchun)
     private ImageUtil() {}
 
     /**
-     * Berilgan Uri manzilidagi rasmni ekran enining 70% o'lchamida ixchamlab saqlaydi.
+     * Rasmlarni saqlash papkasini olamiz (Pictures/Dukono yoki App External Files).
+     */
+    public static File getPicturesDir(Context context) {
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Dukono");
+        if (!dir.exists()) {
+            boolean created = dir.mkdirs();
+            if (!created) {
+                dir = context.getExternalFilesDir("product_images");
+            }
+        }
+        if (dir == null) {
+            dir = new File(context.getFilesDir(), "product_images");
+            if (!dir.exists()) dir.mkdirs();
+        }
+        return dir;
+    }
+
+    /**
+     * Kameradan rasmga olish uchun vaqtinchalik Uri yaratadi.
+     */
+    public static Uri createTempCameraUri(Context context) {
+        try {
+            File cacheDir = new File(context.getCacheDir(), "camera_photos");
+            if (!cacheDir.exists()) cacheDir.mkdirs();
+            File tempFile = new File(cacheDir, "temp_cam_" + System.currentTimeMillis() + ".jpg");
+            String authority = context.getPackageName() + ".fileprovider";
+            return FileProvider.getUriForFile(context, authority, tempFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Berilgan Uri manzilidagi rasmni ekran enining 70% o'lchamida va max 500 KB hajmda ixchamlab saqlaydi.
      *
      * @param context App konteksti
-     * @param imageUri Galeriyadan tanlangan rasm Uri si
-     * @return Saqlangan ichki rasm faylining absolyut yo'li (path), xatolik bo'lsa null
+     * @param imageUri Galeriyadan yoki kameradan olingan rasm Uri si
+     * @return Saqlangan rasm faylining absolyut yo'li (path), xatolik bo'lsa null
      */
     public static String saveProductImage(Context context, Uri imageUri) {
         if (context == null || imageUri == null) return null;
@@ -39,7 +80,7 @@ public final class ImageUtil {
             int targetSize = (int) (displayMetrics.widthPixels * 0.70);
             if (targetSize < 200) targetSize = 400; // Minimal o'lcham chegarasi
 
-            // 1. Dastlab rasmning asl o'lchamlarini (kenglik va balandlik) o'qiymiz (xotiraga to'liq yuklamasdan)
+            // 1. Dastlab rasmning asl o'lchamlarini (kenglik va balandlik) o'qiymiz
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
 
@@ -59,7 +100,7 @@ public final class ImageUtil {
                 inSampleSize *= 2;
             }
 
-            // 3. Endi rasmni xotiraga haqiqiy ixchamlashgan holda dekod qilamiz
+            // 3. Rasmni xotiraga ixchamlashgan holda dekod qilamiz
             options.inJustDecodeBounds = false;
             options.inSampleSize = inSampleSize;
 
@@ -70,7 +111,7 @@ public final class ImageUtil {
 
             if (bitmap == null) return null;
 
-            // 4. Rasmni aniq targetSize (ekran enining 70%) o'lchamigacha proporsional masshtablaymiz
+            // 4. Rasmni targetSize (ekran enining 70%) o'lchamigacha proporsional masshtablaymiz
             int currentMax = Math.max(bitmap.getWidth(), bitmap.getHeight());
             if (currentMax > targetSize) {
                 float scale = (float) targetSize / currentMax;
@@ -83,20 +124,26 @@ public final class ImageUtil {
                 }
             }
 
-            // 5. Saqlash uchun ilovaning ichki papkasida "product_images" papkasini yaratamiz
-            File dir = new File(context.getFilesDir(), "product_images");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
+            // 5. Saqlash uchun Pictures/Dukono papkasini olamiz
+            File dir = getPicturesDir(context);
 
             // Noyob fayl nomi hosil qilamiz
             String fileName = "img_" + System.currentTimeMillis() + ".jpg";
             File outputFile = new File(dir, fileName);
 
-            // 6. Rasmni JPEG formatida (80% sifat bilan) siqib faylga yozamiz
+            // 6. Rasmni JPEG formatida max 500 KB hajmda saqlash
+            int quality = 80;
             try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fos);
                 fos.flush();
+            }
+
+            // Agar rasm hajmi 500 KB dan katta bo'lib ketsa, sifatni 60% ga tushirib qayta siqamiz
+            if (outputFile.length() > MAX_FILE_SIZE_BYTES) {
+                try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fos);
+                    fos.flush();
+                }
             }
 
             // Bitmap xotirasini bo'shatamiz
@@ -147,8 +194,46 @@ public final class ImageUtil {
         try {
             File file = new File(imagePath);
             if (file.exists()) {
-                file.delete();
+                boolean deleted = file.delete();
             }
         } catch (Exception ignored) {}
+    }
+
+    /**
+     * Barcha tovar rasmlarini xotiradan to'liq o'chirish (Sozlamalardagi tozalash uchun).
+     */
+    public static void deleteAllProductImages(Context context) {
+        if (context == null) return;
+        try {
+            // Pictures/Dukono papkasini tozalaymiz
+            File pubDir = getPicturesDir(context);
+            deleteFilesInDir(pubDir);
+
+            // App External Files papkasini tozalaymiz
+            File extDir = context.getExternalFilesDir("product_images");
+            deleteFilesInDir(extDir);
+
+            // App Internal Files papkasini tozalaymiz
+            File intDir = new File(context.getFilesDir(), "product_images");
+            deleteFilesInDir(intDir);
+
+            // Vaqtinchalik kesh fayllarni tozalaymiz
+            File cacheDir = new File(context.getCacheDir(), "camera_photos");
+            deleteFilesInDir(cacheDir);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void deleteFilesInDir(File dir) {
+        if (dir != null && dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isFile()) f.delete();
+                }
+            }
+        }
     }
 }

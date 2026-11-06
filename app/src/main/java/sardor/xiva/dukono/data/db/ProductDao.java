@@ -43,4 +43,7 @@ public interface ProductDao {
            "JOIN units u ON u.id = p.unit_id " +
            "ORDER BY p.name_sort, p.id")
     List<ProductListItem> getAll();
+
+    @Query("UPDATE products SET image_path = NULL")
+    void clearAllImagePaths();
 }

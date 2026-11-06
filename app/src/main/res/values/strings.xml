@@ -168,4 +168,9 @@
     <string name="product_image">Tovar rasmi</string>
     <string name="select_image">Rasm tanlash</string>
     <string name="remove_image">Rasmni o\'chirish</string>
+    <string name="take_photo">Kameradan olish</string>
+    <string name="select_gallery">Galeriyadan tanlash</string>
+    <string name="clear_all_images">Barcha tovar rasmlarini o\'chirish</string>
+    <string name="clear_images_confirm">Barcha tovar rasmlari fayllari o\'chirilsinmi? Tovarlar ma\'lumotlari (nomi, narxi, qoldig\'i) o\'zgarmasdan saqlanib qoladi.</string>
+    <string name="images_cleared">Barcha tovar rasmlari o\'chirildi</string>
 </resources>

@@ -168,4 +168,9 @@
     <string name="product_image">Товар расми</string>
     <string name="select_image">Расм танлаш</string>
     <string name="remove_image">Расмни ўчириш</string>
+    <string name="take_photo">Камерадан олиш</string>
+    <string name="select_gallery">Галереядан танлаш</string>
+    <string name="clear_all_images">Барча товар расмларини ўчириш</string>
+    <string name="clear_images_confirm">Барча товар расмлари файллари ўчирилсинми? Товарлар маълумотлари (номи, нархи, қолдиғи) ўзгармасдан сақланиб қолади.</string>
+    <string name="images_cleared">Барча товар расмлари ўчирилди</string>
 </resources>

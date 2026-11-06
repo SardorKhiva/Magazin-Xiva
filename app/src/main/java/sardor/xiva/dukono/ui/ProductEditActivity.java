@@ -1,6 +1,7 @@
 package sardor.xiva.dukono.ui;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -58,6 +59,8 @@ public class ProductEditActivity extends AppCompatActivity {
     private String currentImagePath;
 
     private ActivityResultLauncher<String> imagePickerLauncher;
+    private ActivityResultLauncher<Uri> cameraLauncher;
+    private Uri tempCameraUri;
 
     private String initialSignature = "";
     private boolean restored;
@@ -97,6 +100,32 @@ public class ProductEditActivity extends AppCompatActivity {
                         });
                     }
                 });
+
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.TakePicture(),
+                success -> {
+                    if (success && tempCameraUri != null) {
+                        AppExecutors.io(() -> {
+                            String path = sardor.xiva.dukono.util.ImageUtil.saveProductImage(this, tempCameraUri);
+                            AppExecutors.main(() -> {
+                                if (path != null) {
+                                    if (currentImagePath != null && !path.equals(currentImagePath)) {
+                                        sardor.xiva.dukono.util.ImageUtil.deleteImageFile(currentImagePath);
+                                    }
+                                    currentImagePath = path;
+                                    renderImagePreview();
+                                }
+                            });
+                        });
+                    }
+                });
+
+        b.cameraImageButton.setOnClickListener(v -> {
+            tempCameraUri = sardor.xiva.dukono.util.ImageUtil.createTempCameraUri(this);
+            if (tempCameraUri != null) {
+                cameraLauncher.launch(tempCameraUri);
+            }
+        });
 
         b.selectImageButton.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
         b.removeImageButton.setOnClickListener(v -> {

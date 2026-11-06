@@ -58,11 +58,20 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/cameraImageButton"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/take_photo"
+                        app:icon="@drawable/ic_camera" />
+
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/selectImageButton"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/select_image"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/select_gallery"
                         app:icon="@drawable/ic_add" />
 
                     <com.google.android.material.button.MaterialButton

@@ -142,7 +142,18 @@ public final class Repo {
     }
 
     public void deleteProduct(long id) {
+        Product p = db.productDao().getById(id);
+        if (p != null && p.imagePath != null) {
+            sardor.xiva.dukono.util.ImageUtil.deleteImageFile(p.imagePath);
+        }
         db.productDao().deleteById(id);
+    }
+
+    public void clearAllProductImages(Context context) {
+        db.runInTransaction(() -> {
+            db.productDao().clearAllImagePaths();
+            sardor.xiva.dukono.util.ImageUtil.deleteAllProductImages(context);
+        });
     }
 
     private void addMovement(long productId, double delta, String reason, String note, long movedAt) {
