@@ -150,7 +150,7 @@
     <string name="products_empty">Товарлар мавжуд эмас</string>
 
     <!-- Динамик PIN -->
-    <string name="dynamic_pin_title">Динамик Ҳимоя PIN-коди</string>
+    <string name="dynamic_pin_title">Ҳимоя PIN-коди</string>
     <string name="dynamic_pin_subtitle">Дастурга кириш учун бугунги PIN-кодни киритинг</string>
     <string name="dynamic_pin_hint">PIN-код</string>
     <string name="dynamic_pin_wrong">PIN-код нотўғри!</string>
@@ -165,8 +165,6 @@
     <string name="import_error">Импорт қилишда хатолик юз берди</string>
 
     <!-- Расм -->
-    <string name="product_image">Товар расми</string>
-    <string name="select_image">Расм танлаш</string>
     <string name="remove_image">Расмни ўчириш</string>
     <string name="take_photo">Камерадан олиш</string>
     <string name="select_gallery">Галереядан танлаш</string>

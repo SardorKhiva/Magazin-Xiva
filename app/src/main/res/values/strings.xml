@@ -165,8 +165,6 @@
     <string name="import_error">Import qilishda xatolik yuz berdi</string>
 
     <!-- Rasm -->
-    <string name="product_image">Tovar rasmi</string>
-    <string name="select_image">Rasm tanlash</string>
     <string name="remove_image">Rasmni o\'chirish</string>
     <string name="take_photo">Kameradan olish</string>
     <string name="select_gallery">Galeriyadan tanlash</string>
